@@ -15,7 +15,7 @@ setup(
     author='Vebjorn Ljosa',
     author_email='vebjorn@ljosa.com',
     packages=['django_js_utils'],
-    version='0.0.5dev',
+    version='0.1.0',
     description=DESCRIPTION,
     long_description=readme_text,
     install_requires=['django'],
