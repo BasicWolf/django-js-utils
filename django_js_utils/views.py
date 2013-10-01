@@ -81,9 +81,12 @@ def jsurls(request):
     handle_url_module(js_patterns, settings.ROOT_URLCONF,
                       locale_prefix=locale_prefix)
 
-    from django.template.loader import get_template
+    json_contenttype = 'application/json'
+    if json_contenttype in request.META.get('HTTP_ACCEPT', '').lower():
+        response = HttpResponse(mimetype=json_contenttype)
+    else:
+        response = HttpResponse(mimetype='text/javascript')
+        response.write('django_js_utils_urlconf = ')
 
-    response = HttpResponse(mimetype='text/javascript')
-    response.write('django_js_utils_urlconf = ')
     json.dump(js_patterns, response)
     return response
