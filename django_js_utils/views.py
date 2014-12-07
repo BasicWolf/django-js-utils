@@ -1,7 +1,7 @@
 import re
 import sys
 import types
-import django.utils.simplejson as json
+import json
 from django.conf import settings
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 from django.http import HttpResponse
@@ -83,9 +83,9 @@ def jsurls(request):
 
     json_contenttype = 'application/json'
     if json_contenttype in request.META.get('HTTP_ACCEPT', '').lower():
-        response = HttpResponse(mimetype=json_contenttype)
+        response = HttpResponse(content_type=json_contenttype)
     else:
-        response = HttpResponse(mimetype='text/javascript')
+        response = HttpResponse(content_type='text/javascript')
         response.write('django_js_utils_urlconf = ')
 
     json.dump(js_patterns, response)
