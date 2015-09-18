@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 from django.http import HttpResponse
 from django.utils.datastructures import SortedDict
+from . import _compat
 
 try:
     from localeurl.utils import locale_url, strip_path
@@ -31,7 +32,7 @@ def jsurls(request):
         Load the module and output all of the patterns
         Recurse on the included modules
         """
-        if isinstance(module_name, basestring):
+        if isinstance(module_name, _compat.string_types):
             __import__(module_name)
             root_urls = sys.modules[module_name]
             patterns = root_urls.urlpatterns
@@ -45,8 +46,10 @@ def jsurls(request):
         for pattern in patterns:
             if issubclass(pattern.__class__, RegexURLPattern):
                 if pattern.name:
-                    pattern_name = u':'.join((namespace, pattern.name)) if \
-                                                    namespace else pattern.name
+                    if namespace:
+                        pattern_name = u':'.join((namespace, pattern.name))
+                    else:
+                        pattern_name = pattern.name
                     full_url = prefix + pattern.regex.pattern
                     for chr in ["^", "$"]:
                         full_url = full_url.replace(chr, "")
