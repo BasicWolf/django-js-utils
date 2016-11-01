@@ -2,10 +2,11 @@ import re
 import sys
 import types
 import json
+from collections import OrderedDict
 from django.conf import settings
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 from django.http import HttpResponse
-from django.utils.datastructures import SortedDict
+
 from . import _compat
 
 try:
@@ -67,6 +68,7 @@ def jsurls(request):
                             full_url = full_url.replace(el, "<>")
                     # Add locale to path if django-localeurl is installed
                     full_url = locale_url("/" + full_url, locale=locale_prefix)
+
                     js_patterns[pattern_name] = full_url
             elif issubclass(pattern.__class__, RegexURLResolver):
                 if ALLOWED_NAMESPACES is None:
@@ -80,7 +82,7 @@ def jsurls(request):
                                       namespace=pattern.namespace,
                                       locale_prefix=locale_prefix)
 
-    js_patterns = SortedDict()
+    js_patterns = OrderedDict()
     handle_url_module(js_patterns, settings.ROOT_URLCONF,
                       locale_prefix=locale_prefix)
 
